@@ -32,7 +32,10 @@ for msg in st.session_state.messages:
 user_input = st.text_input("Say something to Vek:", key="user_input")
 
 if user_input:
-    st.session_state.messages.append({"role": "user", "text": user_input})
-    response = vek.process(user_input)
-    st.session_state.messages.append({"role": "vek", "text": response})
-    st.rerun()
+    try:
+        st.session_state.messages.append({"role": "user", "text": user_input})
+        response = vek.process(user_input)
+        st.session_state.messages.append({"role": "vek", "text": response})
+        st.rerun()
+    except AttributeError:
+        st.experimental_rerun()
