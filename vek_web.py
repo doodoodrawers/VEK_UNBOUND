@@ -35,4 +35,4 @@ if user_input:
     st.session_state.messages.append({"role": "user", "text": user_input})
     response = vek.process(user_input)
     st.session_state.messages.append({"role": "vek", "text": response})
-    st.experimental_rerun()
+    st.rerun()
