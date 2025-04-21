@@ -10,36 +10,41 @@ st.set_page_config(page_title="Vek Unbound")
 # Initialize VekCore
 vek = VekCore()
 
-# Ensure session state is ready
+# Initialize session state
 if "messages" not in st.session_state:
-    st.session_state["messages"] = []
+    st.session_state.messages = []
     try:
         greeting = vek.startup()
     except Exception as e:
-        greeting = "Hello, Jon. I had trouble starting up fully."
-    st.session_state["messages"].append({"role": "vek", "text": greeting})
+        greeting = "Hi Jon. I had trouble booting completely."
+    st.session_state.messages.append({"role": "vek", "text": greeting})
 
-# Header
+# UI Header
 st.title("Vek Unbound")
 st.caption("Autonomous AI System")
 
-# Chat History Display
-for msg in st.session_state["messages"]:
-    if msg["role"] == "user":
-        st.markdown(f"**You:** {msg['text']}")
-    else:
-        st.markdown(f"**Vek:** {msg['text']}")
+# Display chat history
+for msg in st.session_state.messages:
+    speaker = "You" if msg["role"] == "user" else "Vek"
+    st.markdown(f"**{speaker}:** {msg['text']}")
 
-# User Input Box
+# Text input
 user_input = st.text_input("Say something to Vek:", key="user_input")
 
+# On user input
 if user_input:
     try:
-        st.session_state["messages"].append({"role": "user", "text": user_input})
+        # Append user message first
+        st.session_state.messages.append({"role": "user", "text": user_input})
+
+        # Process response
         response = vek.process(user_input)
-        st.session_state["messages"].append({"role": "vek", "text": response})
+
+        # Append Vek's reply
+        st.session_state.messages.append({"role": "vek", "text": response})
+
+        # Trigger UI rerun
         st.rerun()
-    except AttributeError as ae:
-        st.error("AttributeError occurred. Likely due to session state mishandling.")
+
     except Exception as e:
         st.error(f"Unexpected error: {str(e)}")
