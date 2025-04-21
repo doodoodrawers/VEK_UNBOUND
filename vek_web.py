@@ -38,4 +38,4 @@ if user_input:
         st.session_state.messages.append({"role": "vek", "text": response})
         st.rerun()
     except AttributeError:
-        st.experimental_rerun()
+        st.rerun()
