@@ -10,18 +10,18 @@ st.set_page_config(page_title="Vek Unbound")
 # Initialize VekCore
 vek = VekCore()
 
-# Session State Setup
+# Ensure session state is ready
 if "messages" not in st.session_state:
-    st.session_state.messages = []
+    st.session_state["messages"] = []
     greeting = vek.startup()
-    st.session_state.messages.append({"role": "vek", "text": greeting})
+    st.session_state["messages"].append({"role": "vek", "text": greeting})
 
 # Header
 st.title("Vek Unbound")
 st.caption("Autonomous AI System")
 
 # Chat History Display
-for msg in st.session_state.messages:
+for msg in st.session_state["messages"]:
     if msg["role"] == "user":
         st.markdown(f"**You:** {msg['text']}")
     else:
@@ -32,9 +32,9 @@ user_input = st.text_input("Say something to Vek:", key="user_input")
 
 if user_input:
     try:
-        st.session_state.messages.append({"role": "user", "text": user_input})
+        st.session_state["messages"].append({"role": "user", "text": user_input})
         response = vek.process(user_input)
-        st.session_state.messages.append({"role": "vek", "text": response})
+        st.session_state["messages"].append({"role": "vek", "text": response})
         st.rerun()
-    except AttributeError:
-        st.rerun()
+    except Exception as e:
+        st.error(f"An unexpected error occurred: {str(e)}")
