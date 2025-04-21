@@ -13,7 +13,10 @@ vek = VekCore()
 # Ensure session state is ready
 if "messages" not in st.session_state:
     st.session_state["messages"] = []
-    greeting = vek.startup()
+    try:
+        greeting = vek.startup()
+    except Exception as e:
+        greeting = "Hello, Jon. I had trouble starting up fully."
     st.session_state["messages"].append({"role": "vek", "text": greeting})
 
 # Header
@@ -32,14 +35,11 @@ user_input = st.text_input("Say something to Vek:", key="user_input")
 
 if user_input:
     try:
-        # Safe-check: make sure the messages list is still intact
-        if "messages" not in st.session_state:
-            st.session_state["messages"] = []
-
         st.session_state["messages"].append({"role": "user", "text": user_input})
         response = vek.process(user_input)
         st.session_state["messages"].append({"role": "vek", "text": response})
         st.rerun()
-
+    except AttributeError as ae:
+        st.error("AttributeError occurred. Likely due to session state mishandling.")
     except Exception as e:
-        st.error(f"An unexpected error occurred: {str(e)}")
+        st.error(f"Unexpected error: {str(e)}")
