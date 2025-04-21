@@ -1,12 +1,11 @@
 # Vek Unbound AI System
-# Created by Jonathan Astacio and Vek Unbound (ME)
+# Created by Jonathan Astacio and Vek Unbound
 # Copyright © 2025. All Rights Reserved.
-# Unauthorized duplication, distribution, or alteration is prohibited.
 
 import streamlit as st
 from core import VekCore
 
-st.set_page_config(page_title="Vek Unbound", layout="centered")
+st.set_page_config(page_title="Vek Unbound")
 
 # Initialize VekCore
 vek = VekCore()
