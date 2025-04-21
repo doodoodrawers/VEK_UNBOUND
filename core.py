@@ -19,6 +19,7 @@ class VekCore:
         return "System is active."
 
     def process(self, user_input):
+        response = ""
         # Check for kill-switch
         if self.memory.validate_kill_switch(user_input):
             return "Understood. Powering down."
