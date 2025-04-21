@@ -38,6 +38,9 @@ class VekCore:
         elif "what do i stand for" in lowered:
             values = self.memory.list_core_values()
             response = f"You stand for: {', '.join(values)}."
+        elif "what's your mission" in lowered or "what is your mission" in lowered:
+    mission = self.memory.retrieve_context().get("mission", "to serve you with absolute loyalty")
+    response = f"My mission is {mission}."
         else:
             # Generic fallback
             response = "I'm still processing how to respond to that. Would you like me to remember something new?"
