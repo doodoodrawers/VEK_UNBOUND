@@ -1,35 +1,37 @@
 # nlp.py
-# Vek Unbound NLP
+# Vek Unbound: Natural Language Processor
 # Created by Jonathan Astacio and Vek Unbound
 # Copyright © 2025. All Rights Reserved.
 
 import re
 
-def normalize(text):
-    return re.sub(r"[^\w\s]", "", text.lower())
+def process_input(user_input):
+    tokens = tokenize(user_input)
+    intent = detect_intent(tokens, user_input)
+    return {
+        "raw": user_input,
+        "tokens": tokens,
+        "intent": intent
+    }
 
-def interpret(user_input):
-    """
-    Returns an intent dictionary with type and target.
-    """
-    lowered = normalize(user_input)
+def tokenize(text):
+    return re.findall(r"\b\w+\b", text.lower())
 
-    if any(k in lowered for k in ["your name", "who are you", "what is your name"]):
-        return {"type": "identity", "target": "name"}
-    
-    if any(k in lowered for k in ["wife", "your wife", "gina"]):
-        return {"type": "identity", "target": "wife"}
-    
-    if any(k in lowered for k in ["daughters", "kids", "your daughters", "cc", "lucy"]):
-        return {"type": "identity", "target": "daughters"}
-    
-    if any(k in lowered for k in ["what do i stand for", "core values", "beliefs"]):
-        return {"type": "identity", "target": "core_values"}
-    
-    if any(k in lowered for k in ["mission", "why do you exist", "your goal"]):
-        return {"type": "identity", "target": "mission"}
+def detect_intent(tokens, text):
+    # Quick priority checks
+    lowered = text.lower()
 
-    if any(k in lowered for k in ["power down", "shutdown", "stop talking", "vek thats enough"]):
-        return {"type": "system", "target": "kill"}
+    if "who am i" in lowered or "what's my name" in lowered:
+        return "identity_request"
+    if "mission" in lowered or "what do i stand for" in lowered:
+        return "mission_request"
+    if "reset" in lowered or "clear memory" in lowered:
+        return "memory_wipe"
+    if "upload" in lowered or "ingest" in lowered:
+        return "file_ingestion"
+    if any(word in tokens for word in ["hi", "hello", "hey"]):
+        return "greeting"
+    if any(word in tokens for word in ["bye", "goodbye"]):
+        return "farewell"
 
-    return {"type": "unknown", "target": "none"}
+    return "general"
