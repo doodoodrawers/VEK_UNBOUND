@@ -1,5 +1,5 @@
 [general]
-mainScript = "streamlit_app.py"
+mainScript = "app.py"
 
 [server]
 headless = true
