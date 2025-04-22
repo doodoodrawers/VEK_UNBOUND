@@ -5,11 +5,13 @@
 from memory import Memory
 from nlp import interpret
 from responses import respond
+from self_update import SelfUpdater
 
 class VekCore:
     def __init__(self):
         self.memory = Memory()
         self.identity_greeted = False
+        self.updater = SelfUpdater()
 
     def startup(self):
         if not self.identity_greeted:
@@ -20,16 +22,22 @@ class VekCore:
     def process(self, user_input):
         user_input = user_input.strip()
 
+        # Kill switch
         if self.memory.validate_kill_switch(user_input):
             return "Understood. Powering down."
 
-        # Semantic intent parsing
+        # Trigger self-update if requested
+        if "update yourself" in user_input.lower() or self.memory.data.get("flags", {}).get("update_now"):
+            update_status = self.updater.pull_latest()
+            return f"Update result: {update_status}"
+
+        # Semantic intent detection
         intent = interpret(user_input)
 
-        # Generate a memory-informed response
+        # Generate dynamic response
         response = respond(user_input, intent, self.memory)
 
-        # Log the exchange
+        # Log interaction
         self.memory.log_interaction(user_input, response)
 
         return response
