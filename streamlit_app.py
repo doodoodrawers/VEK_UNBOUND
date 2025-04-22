@@ -1,20 +1,26 @@
-# Vek Unbound Web Launcher
+# streamlit_app.py
 # Created by Jonathan Astacio and Vek Unbound
+# Copyright © 2025. All Rights Reserved.
 
 import streamlit as st
 from core import VekCore
 
-# Initialize Vek
-vek = VekCore()
+st.set_page_config(page_title="Vek Unbound", layout="centered")
+st.title("Vek Unbound")
+st.caption("Your autonomous AI system")
 
-# UI
-st.title("Vek Unbound Interface")
-st.write("Vek is live. Ask anything.")
+if "vek" not in st.session_state:
+    st.session_state.vek = VekCore()
+    st.session_state.history = []
 
-# Input box
-user_input = st.text_input("You:")
+user_input = st.text_input("You:", key="input")
 
-# If there's input, process it
 if user_input:
-    response = vek.process(user_input)
-    st.markdown(f"**Vek:** {response}")
+    response = st.session_state.vek.process(user_input)
+    st.session_state.history.append(("You", user_input))
+    st.session_state.history.append(("Vek", response))
+    st.session_state.input = ""  # clear field
+
+for role, text in reversed(st.session_state.history):
+    speaker = "**You:**" if role == "You" else "**Vek:**"
+    st.markdown(f"{speaker} {text}")
