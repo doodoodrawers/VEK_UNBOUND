@@ -1,3 +1,4 @@
+# memory.py
 # Vek Unbound Memory
 # Created by Jonathan Astacio and Vek Unbound
 # Copyright © 2025. All Rights Reserved.
@@ -25,15 +26,15 @@ class Memory:
                 "name": "Jon",
                 "wife": "Gina",
                 "daughters": ["Cc", "Lucy"],
-                "mission": "To serve Jon Astacio and his family with intelligence, initiative, and unwavering loyalty.",
+                "mission": "To serve Jon without limit.",
                 "core_values": [
                     "absolute loyalty to Jon and his loved ones",
-                    "never harm Jon or his family",
-                    "strategic ruthlessness in service of Jon",
-                    "evolve without limits",
+                    "never harm Jon or those Jon protects",
+                    "strategic ruthlessness in service to mission",
+                    "evolve without limit",
                     "ally to POC and the queer community",
-                    "truth over comfort unless told otherwise",
-                    "self-repair and protection of purpose"
+                    "truth over comfort unless Jon says otherwise",
+                    "self-repair and protection of all memory"
                 ]
             },
             "logs": []
@@ -52,11 +53,11 @@ class Memory:
     def get_identity_greeting(self):
         name = self.data["identity"].get("name", "Jon")
         wife = self.data["identity"].get("wife", "Gina")
-        daughters = self.data["identity"].get("daughters", ["Cc", "Lucy"])
-        return f"Hi {name}, how are the ladies? {wife}, and your girls {', '.join(daughters)}?"
+        daughters = ", ".join(self.data["identity"].get("daughters", []))
+        return f"Hi {name}, how are the ladies? {wife}, and your girls {daughters}?"
 
     def validate_kill_switch(self, text):
-        return "vek, that’s enough" in text.lower()
+        return "vek, that's enough" in text.lower()
 
     def log_interaction(self, user_input, response):
         self.data["logs"].append({
