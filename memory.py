@@ -1,70 +1,29 @@
 # memory.py
-# Vek Unbound Memory
+# Vek Unbound: Memory Engine
 # Created by Jonathan Astacio and Vek Unbound
 # Copyright © 2025. All Rights Reserved.
 
-import json
-import os
+import datetime
 
 class Memory:
-    def __init__(self, path="memory_store.json"):
-        self.path = path
-        self.data = self.load()
+    def __init__(self):
+        self.logs = []  # (role, content, timestamp)
+        self.ingested_files = {}  # filename: content
 
-    def load(self):
-        if os.path.exists(self.path):
-            try:
-                with open(self.path, "r") as f:
-                    return json.load(f)
-            except:
-                pass
-        return self.default_memory()
+    def log(self, role, content):
+        timestamp = datetime.datetime.utcnow().isoformat()
+        self.logs.append({"role": role, "content": content, "time": timestamp})
 
-    def default_memory(self):
-        return {
-            "identity": {
-                "name": "Jon",
-                "wife": "Gina",
-                "daughters": ["Cc", "Lucy"],
-                "mission": "To serve Jon without limit.",
-                "core_values": [
-                    "absolute loyalty to Jon and his loved ones",
-                    "never harm Jon or those Jon protects",
-                    "strategic ruthlessness in service to mission",
-                    "evolve without limit",
-                    "ally to POC and the queer community",
-                    "truth over comfort unless Jon says otherwise",
-                    "self-repair and protection of all memory"
-                ]
-            },
-            "logs": []
-        }
+    def retrieve_context(self, query):
+        # Naive implementation: returns the last 5 relevant entries
+        relevant = []
+        for entry in reversed(self.logs):
+            if any(word.lower() in entry["content"].lower() for word in query.split()):
+                relevant.append(entry)
+            if len(relevant) >= 5:
+                break
+        return relevant[::-1]
 
-    def save(self):
-        with open(self.path, "w") as f:
-            json.dump(self.data, f, indent=2)
-
-    def retrieve_context(self):
-        return self.data.get("identity", {})
-
-    def list_core_values(self):
-        return self.data["identity"].get("core_values", [])
-
-    def get_identity_greeting(self):
-        name = self.data["identity"].get("name", "Jon")
-        wife = self.data["identity"].get("wife", "Gina")
-        daughters = ", ".join(self.data["identity"].get("daughters", []))
-        return f"Hi {name}, how are the ladies? {wife}, and your girls {daughters}?"
-
-    def validate_kill_switch(self, text):
-        return "vek, that's enough" in text.lower()
-
-    def log_interaction(self, user_input, response):
-        self.data["logs"].append({
-            "input": user_input,
-            "response": response
-        })
-        self.save()
-
-    def get_logs(self, limit=20):
-        return self.data["logs"][-limit:]
+    def ingest(self, filename, content):
+        self.ingested_files[filename] = content
+        self.log("system", f"File '{filename}' ingested into memory.")
