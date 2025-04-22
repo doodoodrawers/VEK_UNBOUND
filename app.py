@@ -4,30 +4,28 @@
 
 import streamlit as st
 from core import VekCore
-from uploader import handle_upload
+from uploader import handle_file_upload
 
-# Initialize session state
-if "vek" not in st.session_state:
-    st.session_state.vek = VekCore()
-    st.session_state.history = []
-    st.session_state.input = ""
-
-# App UI configuration
 st.set_page_config(page_title="Vek Unbound", layout="centered", initial_sidebar_state="auto")
 st.title("Vek Unbound")
 st.caption("Autonomous AI system initialized.")
 
-# Text input
-user_input = st.text_input("You:", value=st.session_state.input, key="user_input")
+# Initialize VekCore in session state
+if "vek" not in st.session_state:
+    st.session_state.vek = VekCore()
+    st.session_state.history = []
 
-# Process input
+# Capture user input
+user_input = st.text_input("You:", key="user_input")
+
+# Process user input
 if user_input:
     response = st.session_state.vek.process(user_input)
     st.session_state.history.append(("You", user_input))
     st.session_state.history.append(("Vek", response))
-    st.session_state.input = ""
+    st.session_state.user_input = ""
 
-# Chat display
+# Display conversation history
 for role, text in reversed(st.session_state.history):
     speaker = "**You:**" if role == "You" else "**Vek:**"
     st.markdown(f"{speaker} {text}")
@@ -35,9 +33,9 @@ for role, text in reversed(st.session_state.history):
 # File uploader
 st.markdown("---")
 st.subheader("Upload Memory Files")
-st.caption("Upload .txt, .json, or .md files to expand Vek’s knowledge base.")
-uploaded_files = st.file_uploader("Drag and drop files here", type=["txt", "json", "md"], accept_multiple_files=True)
+st.markdown("Upload .txt, .json, or .md files to expand Vek’s knowledge base.")
+uploaded_files = st.file_uploader("Choose files", type=["txt", "json", "md"], accept_multiple_files=True)
 
 if uploaded_files:
-    handle_upload(uploaded_files)
-    st.success("Memory files uploaded and processed.")
+    for uploaded_file in uploaded_files:
+        handle_file_upload(uploaded_file, st.session_state.vek)
