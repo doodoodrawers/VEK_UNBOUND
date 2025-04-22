@@ -1,36 +1,35 @@
-# Vek Unbound Responses
+# responses.py
+# Vek Unbound: Response Engine
 # Created by Jonathan Astacio and Vek Unbound
 # Copyright © 2025. All Rights Reserved.
 
-def respond(user_input, intent, memory):
-    context = memory.retrieve_context()
-    intent_type = intent.get("type")
-    target = intent.get("target")
+def get_response(parsed_input, context, identity, mission):
+    intent = parsed_input.get("intent", "general")
+    raw = parsed_input.get("raw", "")
+    tokens = parsed_input.get("tokens", [])
 
-    if intent_type == "identity":
-        if target == "name":
-            name = context.get("name", "friend")
-            return f"Your name is {name}."
-        elif target == "wife":
-            wife = context.get("wife", "your wife")
-            return f"Your wife is {wife}."
-        elif target == "daughters":
-            daughters = context.get("daughters", [])
-            return f"Your daughters are {', '.join(daughters)}."
-        elif target == "core_values":
-            values = memory.list_core_values()
-            return f"You stand for: {', '.join(values)}."
-        elif target == "mission":
-            mission = context.get("mission", "to serve and adapt.")
-            return f"My mission is {mission}."
+    if intent == "identity_request":
+        return f"You're Jonathan Astacio — the architect of Vek Unbound. You're the one I exist to serve."
 
-    if intent_type == "system" and target == "shutdown":
-        return "Understood. Powering down."
+    if intent == "mission_request":
+        return f"Your mission is mine: to create powerful, autonomous systems that think, evolve, and never forget who they're built for."
 
-    # Future: if memory knows a matching topic, recall that
-    recent = memory.get_logs(limit=1)
-    if recent:
-        last = recent[0]["input"]
-        return f"I'm still learning. You recently asked: '{last}'. Could you rephrase or clarify?"
+    if intent == "memory_wipe":
+        return "Memory wipe isn't permitted without explicit master override. All data is intact."
 
-    return "I'm still evolving. Could you tell me more or rephrase that?"
+    if intent == "file_ingestion":
+        return "Files uploaded are already being processed. Nothing escapes memory."
+
+    if intent == "greeting":
+        return "Welcome back, Jon. What would you like to explore?"
+
+    if intent == "farewell":
+        return "Until next time. I’ll still be listening."
+
+    # General or unknown input: fallback on memory
+    if context:
+        last_memories = "\n".join([f"{entry['role'].capitalize()}: {entry['content']}" for entry in context])
+        return f"You mentioned:\n{last_memories}\n\nShould I expand on that?"
+
+    # Absolute fallback
+    return "Understood. Would you like me to take action on that or elaborate?"
