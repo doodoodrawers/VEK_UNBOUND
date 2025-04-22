@@ -1,46 +1,43 @@
-# app.py
+# streamlit_app.py
 # Created by Jonathan Astacio and Vek Unbound
-# Copyright © 2025. All Rights Reserved
+# Copyright © 2025. All Rights Reserved.
 
 import streamlit as st
 from core import VekCore
+from uploader import handle_upload
 
-# Page setup
-st.set_page_config(page_title="Vek Unbound", layout="centered")
+# Initialize session state
+if "vek" not in st.session_state:
+    st.session_state.vek = VekCore()
+    st.session_state.history = []
+    st.session_state.input = ""
+
+# App UI configuration
+st.set_page_config(page_title="Vek Unbound", layout="centered", initial_sidebar_state="auto")
 st.title("Vek Unbound")
 st.caption("Autonomous AI system initialized.")
 
-# Session-safe key setup
-if "vek" not in st.session_state:
-    st.session_state["vek"] = VekCore()
-if "history" not in st.session_state:
-    st.session_state["history"] = []
-if "input" not in st.session_state:
-    st.session_state["input"] = ""
+# Text input
+user_input = st.text_input("You:", value=st.session_state.input, key="user_input")
 
-# Input text box
-user_input = st.text_input("You:", value=st.session_state["input"], key="input")
-
-# Process user input
+# Process input
 if user_input:
-    response = st.session_state["vek"].process(user_input)
-    st.session_state["history"].append(("You", user_input))
-    st.session_state["history"].append(("Vek", response))
-    st.session_state["input"] = ""  # Reset after submission
-    st.experimental_rerun()
+    response = st.session_state.vek.process(user_input)
+    st.session_state.history.append(("You", user_input))
+    st.session_state.history.append(("Vek", response))
+    st.session_state.input = ""
 
-# Display chat history
-for role, text in reversed(st.session_state["history"]):
-    label = "**You:**" if role == "You" else "**Vek:**"
-    st.markdown(f"{label} {text}")
+# Chat display
+for role, text in reversed(st.session_state.history):
+    speaker = "**You:**" if role == "You" else "**Vek:**"
+    st.markdown(f"{speaker} {text}")
 
-# File uploader section
-st.divider()
+# File uploader
+st.markdown("---")
 st.subheader("Upload Memory Files")
-uploaded_files = st.file_uploader("Drop or browse files", type=["txt", "json", "md"], accept_multiple_files=True)
+st.caption("Upload .txt, .json, or .md files to expand Vek’s knowledge base.")
+uploaded_files = st.file_uploader("Drag and drop files here", type=["txt", "json", "md"], accept_multiple_files=True)
 
 if uploaded_files:
-    for file in uploaded_files:
-        content = file.read().decode("utf-8")
-        st.session_state["vek"].ingest_file(file.name, content)
-        st.success(f"Ingested: {file.name}")
+    handle_upload(uploaded_files)
+    st.success("Memory files uploaded and processed.")
