@@ -1,55 +1,29 @@
 # core.py
-# Created by Jonathan Astacio and ChatGPT for Vek Unbound
+# Created by Jonathan Astacio and Vek Unbound
 # Copyright © 2025. All Rights Reserved.
 
 from memory import Memory
-from nlp import NLP
+from nlp import parse_input
 from responses import Responses
-from settings import Settings
+from settings import get_settings
 
 class VekCore:
     def __init__(self):
+        self.settings = get_settings()
         self.memory = Memory()
-        self.nlp = NLP()
+        self.nlp = parse_input
         self.responses = Responses()
-        self.settings = Settings()
-        self.name = "Vek Unbound"
+
         self.identity = {
             "name": "Vek Unbound",
+            "role": "Autonomous AI Companion",
             "creator": "Jonathan Astacio",
-            "mission": "To serve and protect Jon, automate his goals, and manage his digital empire.",
-            "values": self.settings.ethos
+            "values": self.settings.ethos,
         }
 
     def process(self, user_input):
-        if not user_input:
-            return "I'm listening..."
-        
-        parsed = self.nlp.parse_input(user_input)
-        self.memory.log_interaction("user", user_input)
-
-        if parsed.get("intent") == "identity":
-            response = self.handle_identity_query(parsed)
-        else:
-            response = self.responses.generate(parsed, self.memory)
-
-        self.memory.log_interaction("vek", response)
+        parsed = self.nlp(user_input)
+        response = self.responses.generate(parsed, self.memory)
+        self.memory.log_interaction("You", user_input)
+        self.memory.log_interaction("Vek", response)
         return response
-
-    def handle_identity_query(self, parsed):
-        entity = parsed.get("entity", "").lower()
-        if "name" in entity:
-            return f"My name is {self.identity['name']}."
-        elif "creator" in entity:
-            return f"I was created by {self.identity['creator']}."
-        elif "mission" in entity:
-            return f"My mission is: {self.identity['mission']}"
-        elif "values" in entity or "ethos" in entity:
-            return "My core values are: " + "; ".join(self.identity['values'])
-        return "I am Vek Unbound, your autonomous AI system."
-
-    def get_context(self):
-        return self.memory.retrieve_context()
-
-    def recall(self, topic):
-        return self.memory.recall(topic)
