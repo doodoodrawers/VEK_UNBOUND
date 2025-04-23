@@ -1,29 +1,28 @@
-# Vek Unbound Self-Update System
+# self_update.py
 # Created by Jonathan Astacio and Vek Unbound
 # Copyright © 2025. All Rights Reserved.
 
 import os
 import subprocess
+import streamlit as st
 
-class SelfUpdater:
-    def __init__(self, repo_url="https://github.com/doodoodrawers/VEK_UNBOUND.git", branch="main"):
-        self.repo = repo_url
-        self.branch = branch
-
-    def pull_latest(self):
+class SelfUpdate:
+    @staticmethod
+    def update():
         try:
-            output = subprocess.check_output(["git", "pull", "origin", self.branch])
-            return output.decode("utf-8").strip()
-        except Exception as e:
-            return f"Update failed: {str(e)}"
+            st.info("Checking for updates...")
+            output = subprocess.check_output(['git', 'pull'], stderr=subprocess.STDOUT)
+            result = output.decode('utf-8').strip()
 
-    def update_if_requested(self, trigger=False):
-        if trigger:
-            return self.pull_latest()
-        return "No update requested."
+            if "Already up to date" in result:
+                st.success("Vek Unbound is already up to date.")
+            else:
+                st.success("Update complete. Please refresh the app to load changes.")
+                st.code(result)
+        except subprocess.CalledProcessError as e:
+            st.error("Update failed.")
+            st.code(e.output.decode('utf-8'))
 
-    def show_version(self):
-        try:
-            return subprocess.check_output(["git", "rev-parse", "HEAD"]).decode("utf-8").strip()
-        except:
-            return "Unknown version."
+    @staticmethod
+    def restart():
+        st.warning("Manual restart required to apply updates.")
