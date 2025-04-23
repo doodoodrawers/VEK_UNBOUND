@@ -26,3 +26,6 @@ class FileUploader:
 
             st.info("Memory files uploaded. You can now trigger processing.")
         return uploaded_files
+    def handle_file_upload(uploaded_files):
+    uploader = FileUploader()
+    uploader.upload_files()
