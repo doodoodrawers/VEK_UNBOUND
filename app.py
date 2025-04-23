@@ -1,16 +1,10 @@
-print("start")  # debug line
 # app.py
 # Created by Jonathan Astacio and Vek Unbound
 # Copyright © 2025. All Rights Reserved.
 
 import streamlit as st
-print("line 1 loaded")  # debug line
-
 from core import VekCore
-print("line 2 loaded")  # debug line
-
 from file_uploader import FileUploader
-print("line 3 loaded")  # debug line
 
 st.set_page_config(page_title="Vek Unbound")
 st.title("Vek Unbound")
