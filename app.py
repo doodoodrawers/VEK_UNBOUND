@@ -32,8 +32,7 @@ for role, text in reversed(st.session_state.history):
 st.markdown("---")
 st.header("Upload Memory Files")
 st.markdown("Upload .txt, .json, or .md files to expand Vek’s knowledge base.")
-uploaded_files = st.file_uploader("Upload", type=["txt", "json", "md"], accept_multiple_files=True)
+uploaded_files = handle_file_upload()
 
 if uploaded_files:
-    handle_file_upload(uploaded_files)
     st.success("Files uploaded and processed successfully.")
