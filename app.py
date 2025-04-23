@@ -4,7 +4,7 @@
 
 import streamlit as st
 from core import VekCore
-from uploader import FileUploader
+from file_uploader import FileUploader
 
 st.set_page_config(page_title="Vek Unbound", page_icon=":robot_face:", layout="wide")
 st.title("Vek Unbound")
