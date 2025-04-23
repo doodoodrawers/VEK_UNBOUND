@@ -1,30 +1,28 @@
-# Vek Unbound Uploader
+# uploader.py
 # Created by Jonathan Astacio and Vek Unbound
 # Copyright © 2025. All Rights Reserved.
 
 import streamlit as st
-import json
-from memory import Memory
+import os
 
-def upload_interface(memory: Memory):
-    st.subheader("Upload Knowledge or Identity Files")
+class FileUploader:
+    def __init__(self, upload_dir="uploads"):
+        self.upload_dir = upload_dir
+        os.makedirs(self.upload_dir, exist_ok=True)
 
-    uploaded_file = st.file_uploader("Drop a .json or .txt file to extend memory", type=["json", "txt"])
+    def upload_files(self):
+        uploaded_files = st.file_uploader(
+            "Upload Memory Files",
+            type=["txt", "json", "md"],
+            accept_multiple_files=True
+        )
 
-    if uploaded_file:
-        try:
-            if uploaded_file.type == "application/json":
-                uploaded_data = json.load(uploaded_file)
-                memory.data["identity"].update(uploaded_data)
-                memory.save()
-                st.success("Memory successfully updated from uploaded file.")
+        if uploaded_files:
+            for uploaded_file in uploaded_files:
+                file_path = os.path.join(self.upload_dir, uploaded_file.name)
+                with open(file_path, "wb") as f:
+                    f.write(uploaded_file.getbuffer())
+                st.success(f"Uploaded: {uploaded_file.name}")
 
-            elif uploaded_file.type == "text/plain":
-                content = uploaded_file.read().decode("utf-8")
-                memory.log_interaction("FILE_UPLOAD", content)
-                st.success("Text file logged to memory.")
-
-            else:
-                st.warning("Unsupported file format.")
-        except Exception as e:
-            st.error(f"Upload failed: {str(e)}")
+            st.info("Memory files uploaded. You can now trigger processing.")
+        return uploaded_files
