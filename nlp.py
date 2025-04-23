@@ -1,37 +1,23 @@
 # nlp.py
-# Vek Unbound: Natural Language Processor
 # Created by Jonathan Astacio and Vek Unbound
 # Copyright © 2025. All Rights Reserved.
 
-import re
+class NLP:
+    def parse_input(self, text):
+        lowered = text.lower()
+        if "your name" in lowered or "who are you" in lowered:
+            return {"intent": "identity", "entity": "name"}
+        elif "creator" in lowered or "who made you" in lowered:
+            return {"intent": "identity", "entity": "creator"}
+        elif "mission" in lowered:
+            return {"intent": "identity", "entity": "mission"}
+        elif "ethos" in lowered or "values" in lowered:
+            return {"intent": "identity", "entity": "values"}
+        elif "recall" in lowered:
+            keyword = lowered.split("recall", 1)[-1].strip()
+            return {"intent": "recall", "keyword": keyword}
+        else:
+            return {"intent": "general", "text": text}
 
-def process_input(user_input):
-    tokens = tokenize(user_input)
-    intent = detect_intent(tokens, user_input)
-    return {
-        "raw": user_input,
-        "tokens": tokens,
-        "intent": intent
-    }
-
-def tokenize(text):
-    return re.findall(r"\b\w+\b", text.lower())
-
-def detect_intent(tokens, text):
-    # Quick priority checks
-    lowered = text.lower()
-
-    if "who am i" in lowered or "what's my name" in lowered:
-        return "identity_request"
-    if "mission" in lowered or "what do i stand for" in lowered:
-        return "mission_request"
-    if "reset" in lowered or "clear memory" in lowered:
-        return "memory_wipe"
-    if "upload" in lowered or "ingest" in lowered:
-        return "file_ingestion"
-    if any(word in tokens for word in ["hi", "hello", "hey"]):
-        return "greeting"
-    if any(word in tokens for word in ["bye", "goodbye"]):
-        return "farewell"
-
-    return "general"
+    def analyze_intent(self, text):
+        return self.parse_input(text)  # Alias for compatibility
