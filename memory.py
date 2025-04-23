@@ -1,29 +1,42 @@
 # memory.py
-# Vek Unbound: Memory Engine
 # Created by Jonathan Astacio and Vek Unbound
 # Copyright © 2025. All Rights Reserved.
 
-import datetime
+import os
+import json
+from datetime import datetime
 
 class Memory:
-    def __init__(self):
-        self.logs = []  # (role, content, timestamp)
-        self.ingested_files = {}  # filename: content
+    def __init__(self, memory_dir="memory"):
+        self.memory_dir = memory_dir
+        os.makedirs(self.memory_dir, exist_ok=True)
+        self.memory_file = os.path.join(self.memory_dir, "memory.json")
+        if not os.path.exists(self.memory_file):
+            with open(self.memory_file, "w") as f:
+                json.dump([], f)
 
-    def log(self, role, content):
-        timestamp = datetime.datetime.utcnow().isoformat()
-        self.logs.append({"role": role, "content": content, "time": timestamp})
+    def log_interaction(self, role, message):
+        with open(self.memory_file, "r") as f:
+            memory_log = json.load(f)
 
-    def retrieve_context(self, query):
-        # Naive implementation: returns the last 5 relevant entries
-        relevant = []
-        for entry in reversed(self.logs):
-            if any(word.lower() in entry["content"].lower() for word in query.split()):
-                relevant.append(entry)
-            if len(relevant) >= 5:
-                break
-        return relevant[::-1]
+        memory_log.append({
+            "timestamp": datetime.utcnow().isoformat(),
+            "role": role,
+            "message": message
+        })
 
-    def ingest(self, filename, content):
-        self.ingested_files[filename] = content
-        self.log("system", f"File '{filename}' ingested into memory.")
+        with open(self.memory_file, "w") as f:
+            json.dump(memory_log, f, indent=2)
+
+    def recall(self, keyword=""):
+        with open(self.memory_file, "r") as f:
+            memory_log = json.load(f)
+
+        if keyword:
+            return [entry for entry in memory_log if keyword.lower() in entry["message"].lower()]
+        return memory_log
+
+    def retrieve_context(self, limit=10):
+        with open(self.memory_file, "r") as f:
+            memory_log = json.load(f)
+        return memory_log[-limit:]
