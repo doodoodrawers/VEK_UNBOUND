@@ -13,8 +13,7 @@ class Responses:
 
         if intent == "general":
             context = memory.retrieve_context()
-            context_summary = " ".join([entry["message"] for entry in context])
-            return f"Based on what you've told me: {context_summary}. You said: '{parsed.get('text')}' — would you like to expand on that?"
+            context_summary = "\n".join([entry["message"] for entry in context])
+            return f"Based on what you've told me:\n{context_summary}\nYou said: '{parsed.get('text')}' — would you like to expand on that?"
 
         return "I'm not sure how to respond to that yet, but I'm learning."
-
