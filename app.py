@@ -25,8 +25,8 @@ if user_input:
 
 # Chat display
 for role, text in reversed(st.session_state.history):
-speaker = "**You:**" if role == "You" else "**Vek:**"
-st.markdown(f"{speaker} {text}")
+  speaker = "**You:**" if role == "You" else "**Vek:**"
+  st.markdown(f"{speaker} {text}")
 
 # File uploader section
 st.markdown("---")
