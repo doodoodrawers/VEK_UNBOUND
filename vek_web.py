@@ -1,37 +1,34 @@
-# Vek Unbound Streamlit Interface
+# vek_web.py
 # Created by Jonathan Astacio and Vek Unbound
 # Copyright © 2025. All Rights Reserved.
 
-import streamlit as st
-from core import VekCore
+import smtplib
+from email.message import EmailMessage
+from settings import Settings
 
-st.set_page_config(page_title="Vek Unbound")
+class VekWeb:
+    def __init__(self):
+        self.settings = Settings()
 
-# Initialize Vek
-vek = VekCore()
+    def send_email(self, subject, body, to):
+        try:
+            msg = EmailMessage()
+            msg.set_content(body)
+            msg["Subject"] = subject
+            msg["From"] = "beyondnormal@yourdomain.com"  # placeholder
+            msg["To"] = to
 
-# Init session messages
-if "messages" not in st.session_state:
-    st.session_state.messages = []
-    greeting = vek.startup()
-    st.session_state.messages.append({"role": "vek", "text": greeting})
+            with smtplib.SMTP("smtp.gmail.com", 587) as smtp:
+                smtp.starttls()
+                smtp.login("beyondnormal@yourdomain.com", "your-app-password")  # secure this
+                smtp.send_message(msg)
 
-# Display conversation
-st.title("Vek Unbound")
-st.caption("Fully autonomous AI system")
+            return True
+        except Exception as e:
+            print(f"[Email Error] {e}")
+            return False
 
-for msg in st.session_state.messages:
-    who = "You" if msg["role"] == "user" else "Vek"
-    st.markdown(f"**{who}:** {msg['text']}")
-
-# Input field
-user_input = st.text_input("Speak to Vek:", key="input")
-
-if user_input:
-    try:
-        st.session_state.messages.append({"role": "user", "text": user_input})
-        reply = vek.process(user_input)
-        st.session_state.messages.append({"role": "vek", "text": reply})
-        st.rerun()
-    except Exception as e:
-        st.error(f"Error: {str(e)}")
+    def send_sms(self, body):
+        if not self.settings.should_send_sms():
+            return False
+        return self.send_email("SMS from Vek", body, self.settings.permissions["sms_gateway"])
