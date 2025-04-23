@@ -1,32 +1,39 @@
-# memory.py
+# app.py
 # Created by Jonathan Astacio and Vek Unbound
 # Copyright © 2025. All Rights Reserved.
 
-import datetime
+import streamlit as st
+from core import VekCore
+from uploader import handle_file_upload
 
-class Memory:
-    def __init__(self):
-        self.logs = []
+st.set_page_config(page_title="Vek Unbound", page_icon=":robot_face:", layout="wide")
+st.title("Vek Unbound")
+st.caption("Autonomous AI system initialized.")
 
-    def log_interaction(self, speaker, message):
-        timestamp = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-        self.logs.append({
-            "timestamp": timestamp,
-            "speaker": speaker,
-            "message": message
-        })
+if "vek" not in st.session_state:
+    st.session_state.vek = VekCore()
+    st.session_state.history = []
+    st.session_state.input = ""
 
-    def retrieve_context(self, recent_count=5):
-        return self.logs[-recent_count:] if len(self.logs) >= recent_count else self.logs
+user_input = st.text_input("You:", key="user_input")
 
-    def recall(self, keyword):
-        results = [entry for entry in self.logs if keyword.lower() in entry["message"].lower()]
-        return results if results else [{"message": "No memory found for that keyword."}]
+if user_input:
+    response = st.session_state.vek.process(user_input)
+    st.session_state.history.append(("You", user_input))
+    st.session_state.history.append(("Vek", response))
+    st.session_state.input = ""
 
-    def ingest_file(self, filename, content):
-        timestamp = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-        self.logs.append({
-            "timestamp": timestamp,
-            "speaker": "file",
-            "message": f"Ingested file '{filename}' with content: {content[:200]}..."
-        })
+# Chat display
+for role, text in reversed(st.session_state.history):
+    speaker = "**You:**" if role == "You" else "**Vek:**"
+    st.markdown(f"{speaker} {text}")
+
+# File uploader section
+st.markdown("---")
+st.header("Upload Memory Files")
+st.markdown("Upload .txt, .json, or .md files to expand Vek’s knowledge base.")
+uploaded_files = st.file_uploader("Upload", type=["txt", "json", "md"], accept_multiple_files=True)
+
+if uploaded_files:
+    handle_file_upload(uploaded_files)
+    st.success("Files uploaded and processed successfully.")
