@@ -1,5 +1,6 @@
 # app.py
 # Created by Jonathan Astacio and Vek Unbound
+# Copyright 2025. All Rights Reserved. 
 
 import streamlit as st
 from core import VekCore
