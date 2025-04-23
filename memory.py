@@ -40,3 +40,7 @@ class Memory:
         with open(self.memory_file, "r") as f:
             memory_log = json.load(f)
         return memory_log[-limit:]
+   
+    def log_entry(self, entry):
+    """Logs a single memory entry, regardless of type."""
+    self.store.append(entry)
