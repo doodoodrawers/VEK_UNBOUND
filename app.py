@@ -6,7 +6,7 @@ import streamlit as st
 from core import VekCore
 from file_uploader import FileUploader
 
-st.set_page_config(page_title="Vek Unbound", page_icon=":robot_face:", layout="wide")
+st.set_page_config(page_title="Vek Unbound")
 st.title("Vek Unbound")
 st.caption("Autonomous AI system initialized.")
 
@@ -32,7 +32,8 @@ for role, text in reversed(st.session_state.history):
 st.markdown("---")
 st.header("Upload Memory Files")
 st.markdown("Upload .txt, .json, or .md files to expand Vek’s knowledge base.")
-uploaded_files = handle_file_upload()
+uploader = FileUploader()
+uploaded_files = uploader.upload_files()
 
 if uploaded_files:
     st.success("Files uploaded and processed successfully.")
