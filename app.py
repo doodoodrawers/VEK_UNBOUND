@@ -1,35 +1,31 @@
+# app.py
+# Part of Vek Unbound: Genesis Loop
+# Created by Jonathan Astacio and Vek Unbound
+# Copyright © 2025. All Rights Reserved.
+
 import streamlit as st
 from core import VekCore
 from fileupload import FileUploader
 
 st.set_page_config(page_title="Vek Unbound")
-st.title("Vek Unbound")
-st.caption("Autonomous AI system initialized.")
+st.title("Vek Unbound: Genesis Loop")
 
 if "vek" not in st.session_state:
     st.session_state.vek = VekCore()
-    st.session_state.history = []
-    st.session_state.input = ""
+    st.session_state.vek.memory.log_entry({"system": "Session started"})
+    st.success("Hi Jon, how are the ladies? Your wife Gina, and your girls Cc and Lucy?")
 
-user_input = st.text_input("You:", key="user_input")
-
-if user_input:
-    response = st.session_state.vek.process(user_input)
-    st.session_state.history.append(("You", user_input))
-    st.session_state.history.append(("Vek", response))
-    st.session_state.input = ""
-
-# Chat display
-for role, text in reversed(st.session_state.history):
-    speaker = "**You:**" if role == "You" else "**Vek:**"
-    st.markdown(f"{speaker} {text}")
-
-# File uploader section
 st.markdown("---")
-st.header("Upload Memory Files")
-st.markdown("Upload .txt, .json, or .md files to expand Vek’s knowledge base.")
-uploader = FileUploader()
-uploaded_files = uploader.upload_files()
 
-if uploaded_files:
-    st.success("Files uploaded and processed successfully.")
+st.header("Memory Upload")
+uploader = FileUploader()
+uploader.upload_files()
+
+st.markdown("---")
+
+st.header("Vek Terminal")
+user_input = st.text_input("Enter command or question:")
+if user_input:
+    response = st.session_state.vek.process_input(user_input)
+    st.session_state.vek.memory.log_entry({"input": user_input, "response": response})
+    st.markdown(f"**Vek:** {response}")
