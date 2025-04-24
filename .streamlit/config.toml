@@ -1,22 +1,16 @@
 [server]
 headless = true
+port = 8501
 
 [theme]
 base = "dark"
 
-[general]
-browserServerAddress = "localhost"
-browserGatherUsageStats = false
+[client]
+showSidebarNavigation = false
 
 [runner]
 magicEnabled = true
 fastReruns = true
-
-[client]
-showSidebarNavigation = false
-
-[server]
-port = 8501
 
 [global]
 developmentMode = false
