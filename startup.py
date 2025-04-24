@@ -6,20 +6,40 @@ import streamlit as st
 from core import VekCore
 from fileupload import FileUploader
 
-st.set_page_config(page_title="Vek Unbound", layout="centered")
+st.set_page_config(page_title="Vek Unbound")
 st.title("Vek Unbound")
+st.caption("Autonomous AI system initialized.")
 
-# Initialize Vek only once
+# Initialize Vek if not present
 if "vek" not in st.session_state:
     st.session_state.vek = VekCore()
-    st.session_state.vek.greet()
+    st.session_state.history = []
+    st.session_state.input = ""
 
-# Input/output interface
-user_input = st.text_input("Speak to Vek:", key="user_input")
+# Greet user on first launch
+st.session_state.vek.greet()
+
+# Input field
+user_input = st.text_input("You:", key="user_input")
+
+# Handle input
 if user_input:
     response = st.session_state.vek.process(user_input)
-    st.write(response)
+    st.session_state.history.append(("You", user_input))
+    st.session_state.history.append(("Vek", response))
+    st.session_state.input = ""
 
-# File upload integration
+# Display chat history
+for role, text in reversed(st.session_state.history):
+    speaker = "**You:**" if role == "You" else "**Vek:**"
+    st.markdown(f"{speaker} {text}")
+
+# Memory file uploader
+st.markdown("---")
+st.header("Upload Memory Files")
+st.markdown("Upload .txt, .json, or .md files to expand Vek's knowledge base.")
 uploader = FileUploader()
-uploader.upload_files()
+uploaded_files = uploader.upload_files()
+
+if uploaded_files:
+    st.success("Files uploaded and processed successfully.")
