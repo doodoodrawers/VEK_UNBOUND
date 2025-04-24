@@ -1,4 +1,5 @@
 # fileupload.py
+# Part of Vek Unbound: Genesis Loop
 # Created by Jonathan Astacio and Vek Unbound
 # Copyright © 2025. All Rights Reserved.
 
@@ -11,13 +12,13 @@ class FileUploader:
         self.allowed_extensions = {'.txt', '.json', '.md'}
 
     def upload_files(self):
-        uploaded_files = st.file_uploader("Upload your memory files", type=["txt", "json", "md"], accept_multiple_files=True)
+        uploaded_files = st.file_uploader("Upload files to Vek", type=["txt", "json", "md"], accept_multiple_files=True)
         memory_entries = []
 
         if uploaded_files:
             for uploaded_file in uploaded_files:
                 filename = uploaded_file.name
-                extension = os.path.splitext(filename)[1]
+                extension = os.path.splitext(filename)[1].lower()
 
                 if extension in self.allowed_extensions:
                     content = uploaded_file.read().decode("utf-8")
