@@ -4,34 +4,26 @@
 # Copyright © 2025. All Rights Reserved.
 
 import streamlit as st
-from core import VekCore
-from fileupload import FileUploader
+import requests
 
-if 'vek' not in st.session_state:
-    st.session_state.vek = VekCore()
-    st.session_state.greeted = False
+class VekWeb:
+    def __init__(self):
+        self.session = requests.Session()
 
-vek = st.session_state.vek
+    def fetch_page_title(self, url):
+        try:
+            response = self.session.get(url)
+            if response.ok:
+                start = response.text.find("<title>") + len("<title>")
+                end = response.text.find("</title>")
+                return response.text[start:end] if start != -1 and end != -1 else "Title not found"
+            return f"Failed to fetch URL: {response.status_code}"
+        except Exception as e:
+            return f"Error fetching URL: {str(e)}"
 
-st.set_page_config(page_title="Vek Unbound")
-st.title("Vek Unbound")
-
-if not st.session_state.greeted:
-    st.success("Hi Jon. How are the ladies? Your wife Gina, and your girls Cc and Lucy?")
-    st.session_state.greeted = True
-
-user_input = st.text_input("Talk to Vek")
-
-if user_input:
-    response = vek.process_input(user_input)
-    st.write(response)
-    vek.memory.log_entry({"type": "interaction", "input": user_input, "response": response})
-
-uploader = FileUploader()
-uploader.upload_files()
-
-st.write("\n---\n")
-st.subheader("Recent Memory")
-recent = vek.memory.get_recent()
-for entry in recent:
-    st.json(entry)
+    def post_data(self, url, payload):
+        try:
+            response = self.session.post(url, json=payload)
+            return response.json() if response.ok else {"error": response.text}
+        except Exception as e:
+            return {"exception": str(e)}
