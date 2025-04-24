@@ -44,3 +44,6 @@ class VekCore:
 
     def dynamic_response(self, user_input):
         return f"I hear you, Jon. You said: '{user_input}' — what would you like me to do with that?"
+
+    def greet(self):
+        return "Hi Jon, how are the ladies? Gina, and your girls Cc, Lucy?"
