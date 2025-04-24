@@ -1,19 +1,22 @@
 [server]
 headless = true
 port = 8501
+enableCORS = false
 
 [theme]
-base = "dark"
+base="dark"
 
-[client]
-showSidebarNavigation = false
+[general]
+email = "your-email@example.com"
 
 [runner]
 magicEnabled = true
-fastReruns = true
 
-[global]
-developmentMode = false
+[client]
+showErrorDetails = true
 
-[streamlit]
+[browser]
+gatherUsageStats = false
+
+[app]
 script = "startup.py"
