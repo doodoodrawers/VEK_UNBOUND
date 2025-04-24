@@ -1,13 +1,22 @@
+# .streamlit/config.toml
+# Created by Jonathan Astacio and Vek Unbound
+# Copyright © 2025. All Rights Reserved.
+
 [server]
 headless = true
+enableCORS = false
+port = 8501
 
 [theme]
-primaryColor = "#F63366"
-backgroundColor = "#1E1E1E"
+primaryColor = "#00BFFF"
+backgroundColor = "#0E1117"
 secondaryBackgroundColor = "#262730"
 textColor = "#FAFAFA"
 font = "sans serif"
 
+[client]
+showErrorDetails = true
+
 [general]
-# Set your main entry point
+# Set your startup script here
 mainScript = "startup.py"
