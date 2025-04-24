@@ -3,35 +3,51 @@
 # Created by Jonathan Astacio and Vek Unbound
 # Copyright © 2025. All Rights Reserved.
 
-import json
 import os
-import datetime
+import json
+from datetime import datetime
 
 class Memory:
-    def __init__(self, memory_file='memory.json'):
-        self.memory_file = memory_file
+    def __init__(self, filename="vek_memory.json"):
+        self.filename = filename
         self.entries = []
-        self.load_memory()
+        self.load()
 
-    def load_memory(self):
-        if os.path.exists(self.memory_file):
-            with open(self.memory_file, 'r') as f:
-                try:
+    def load(self):
+        if os.path.exists(self.filename):
+            try:
+                with open(self.filename, "r") as f:
                     self.entries = json.load(f)
-                except json.JSONDecodeError:
-                    self.entries = []
+            except Exception as e:
+                print(f"Failed to load memory file: {e}")
+                self.entries = []
 
-    def save_memory(self):
-        with open(self.memory_file, 'w') as f:
-            json.dump(self.entries, f, indent=4)
+    def save(self):
+        try:
+            with open(self.filename, "w") as f:
+                json.dump(self.entries, f, indent=2)
+        except Exception as e:
+            print(f"Failed to save memory file: {e}")
 
     def log_entry(self, entry):
-        timestamped_entry = {
-            "timestamp": datetime.datetime.now().isoformat(),
-            **entry
-        }
-        self.entries.append(timestamped_entry)
-        self.save_memory()
+        if isinstance(entry, dict):
+            entry["timestamp"] = datetime.now().isoformat()
+            self.entries.append(entry)
+        elif isinstance(entry, str):
+            self.entries.append({"content": entry, "timestamp": datetime.now().isoformat()})
+        else:
+            self.entries.append({"content": str(entry), "timestamp": datetime.now().isoformat()})
+        self.save()
 
-    def get_recent(self, count=10):
-        return self.entries[-count:]
+    def get_entries(self):
+        return self.entries
+
+    def search(self, keyword):
+        return [entry for entry in self.entries if keyword.lower() in str(entry).lower()]
+
+    def clear(self):
+        self.entries = []
+        self.save()
+
+    def latest(self, n=5):
+        return self.entries[-n:]
