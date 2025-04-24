@@ -1,34 +1,37 @@
 # vek_web.py
+# Part of Vek Unbound: Genesis Loop
 # Created by Jonathan Astacio and Vek Unbound
 # Copyright © 2025. All Rights Reserved.
 
-import smtplib
-from email.message import EmailMessage
-from settings import Settings
+import streamlit as st
+from core import VekCore
+from fileupload import FileUploader
 
-class VekWeb:
-    def __init__(self):
-        self.settings = Settings()
+if 'vek' not in st.session_state:
+    st.session_state.vek = VekCore()
+    st.session_state.greeted = False
 
-    def send_email(self, subject, body, to):
-        try:
-            msg = EmailMessage()
-            msg.set_content(body)
-            msg["Subject"] = subject
-            msg["From"] = "beyondnormal@yourdomain.com"  # placeholder
-            msg["To"] = to
+vek = st.session_state.vek
 
-            with smtplib.SMTP("smtp.gmail.com", 587) as smtp:
-                smtp.starttls()
-                smtp.login("beyondnormal@yourdomain.com", "your-app-password")  # secure this
-                smtp.send_message(msg)
+st.set_page_config(page_title="Vek Unbound")
+st.title("Vek Unbound")
 
-            return True
-        except Exception as e:
-            print(f"[Email Error] {e}")
-            return False
+if not st.session_state.greeted:
+    st.success("Hi Jon. How are the ladies? Your wife Gina, and your girls Cc and Lucy?")
+    st.session_state.greeted = True
 
-    def send_sms(self, body):
-        if not self.settings.should_send_sms():
-            return False
-        return self.send_email("SMS from Vek", body, self.settings.permissions["sms_gateway"])
+user_input = st.text_input("Talk to Vek")
+
+if user_input:
+    response = vek.process_input(user_input)
+    st.write(response)
+    vek.memory.log_entry({"type": "interaction", "input": user_input, "response": response})
+
+uploader = FileUploader()
+uploader.upload_files()
+
+st.write("\n---\n")
+st.subheader("Recent Memory")
+recent = vek.memory.get_recent()
+for entry in recent:
+    st.json(entry)
