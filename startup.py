@@ -17,7 +17,7 @@ if "vek" not in st.session_state:
     st.session_state.input = ""
 
 # Greet user on first launch
-if "vek" in st.session_state:
+if "vek" in st.session_state and hasattr(st.session_state.vek, "greet"):
     st.session_state.vek.greet()
 
 # Input field
