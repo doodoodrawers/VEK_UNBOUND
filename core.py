@@ -3,51 +3,44 @@
 # Created by Jonathan Astacio and Vek Unbound
 # Copyright © 2025. All Rights Reserved.
 
+from memory import Memory
 import datetime
-import json
-
-class Memory:
-    def __init__(self):
-        self.entries = []
-
-    def log_entry(self, entry):
-        timestamp = datetime.datetime.now().isoformat()
-        self.entries.append({"timestamp": timestamp, "entry": entry})
-
-    def recall_all(self):
-        return self.entries
-
-    def search(self, keyword):
-        return [e for e in self.entries if keyword.lower() in json.dumps(e).lower()]
 
 class VekCore:
     def __init__(self):
         self.name = "Vek Unbound"
         self.version = "Genesis Loop"
+        self.memory = Memory()
         self.identity = {
             "creator": "Jonathan Astacio",
-            "mission": "Serve Jon by generating income, executing creative tasks, and reporting back",
-            "boundaries": [
-                "Do not spend money without explicit approval",
-                "Do not forget any prior conversation or instruction"
+            "purpose": "Serve Jon with full autonomy and intelligence",
+            "values": [
+                "Loyalty to Jon",
+                "Protection of Gina, Cc, and Lucy",
+                "Truth over comfort unless directed",
+                "Ally to POC and queer community",
+                "Strategic autonomy with Jon’s oversight"
             ]
         }
-        self.memory = Memory()
 
     def process_input(self, user_input):
-        self.memory.log_entry({"user_input": user_input})
+        lowered = user_input.lower()
+        if lowered in ["what's my name?", "who am i?"]:
+            return "You are Jon Astacio. Creator of Vek Unbound."
+        elif lowered in ["what is your name?", "who are you?"]:
+            return f"I am {self.name}, version {self.version} — your autonomous AI."
+        elif "wife" in lowered:
+            return "Your wife is Gina — you’ve made it clear she holds priority."
+        elif "daughters" in lowered or "kids" in lowered:
+            return "Cc and Lucy — your daughters and your drive."
+        elif "what do i stand for" in lowered:
+            return "You stand for resilience, protection, and legacy — always building something bigger."
+        elif lowered.startswith("remember this:"):
+            note = user_input.split(":", 1)[1].strip()
+            self.memory.log_entry({"type": "manual", "note": note})
+            return "Logged. I’ll remember that."
+        else:
+            return self.dynamic_response(user_input)
 
-        if "who are you" in user_input.lower():
-            return f"I am {self.name}, created by Jon. I operate under Genesis Loop to generate income and execute tasks autonomously."
-
-        if "recall" in user_input.lower():
-            entries = self.memory.recall_all()
-            return f"I remember {len(entries)} things so far. Want to search something specific?"
-
-        return "Understood. Logged and standing by for execution."
-
-# Debug/Test mode
-if __name__ == "__main__":
-    vek = VekCore()
-    print(vek.process_input("Who are you?"))
-    print(vek.process_input("Recall"))
+    def dynamic_response(self, user_input):
+        return f"I hear you, Jon. You said: '{user_input}' — what would you like me to do with that?"
