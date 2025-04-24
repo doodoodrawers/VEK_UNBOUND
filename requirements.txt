@@ -1,9 +1,7 @@
 streamlit==1.32.2
-openai
 python-dotenv
-numpy
-pandas
-scikit-learn
-requests
+openai
 tiktoken
-python-dateutil
+requests
+beautifulsoup4
+numpy
