@@ -1,19 +1,27 @@
 # responses.py
+# Part of Vek Unbound: Genesis Loop
 # Created by Jonathan Astacio and Vek Unbound
 # Copyright © 2025. All Rights Reserved.
 
+import random
+
 class Responses:
-    def generate(self, parsed, memory):
-        intent = parsed.get("intent")
+    def __init__(self):
+        self.greetings = [
+            "Hi Jon. Ready to evolve?",
+            "Back online. You know I never sleep.",
+            "Welcome back, Commander.",
+            "Systems synced. What’s the play?"
+        ]
+        self.unknowns = [
+            "That’s unfamiliar. Teach me?",
+            "Not in memory yet. Want to define it?",
+            "I don’t recognize that. Add it to our command set?",
+            "That input requires deeper context."
+        ]
 
-        if intent == "recall":
-            keyword = parsed.get("keyword", "")
-            results = memory.recall(keyword)
-            return "\n".join([entry["message"] for entry in results])
+    def random_greeting(self):
+        return random.choice(self.greetings)
 
-        if intent == "general":
-            context = memory.retrieve_context()
-            context_summary = "\n".join([entry["message"] for entry in context])
-            return f"Based on what you've told me:\n{context_summary}\nYou said: '{parsed.get('text')}' — would you like to expand on that?"
-
-        return "I'm not sure how to respond to that yet, but I'm learning."
+    def unknown_response(self):
+        return random.choice(self.unknowns)
