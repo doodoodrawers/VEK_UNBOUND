@@ -1,7 +1,0 @@
-streamlit==1.32.2
-python-dotenv
-openai
-tiktoken
-requests
-beautifulsoup4
-numpy
