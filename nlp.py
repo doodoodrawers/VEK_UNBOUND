@@ -1,45 +1,29 @@
 # nlp.py
-# Part of Vek Unbound: Genesis Loop
 # Created by Jonathan Astacio and Vek Unbound
 # Copyright © 2025. All Rights Reserved.
 
-def extract_keywords(text):
-    """
-    Extracts keywords from input text for processing.
-    Currently returns words longer than 3 characters, lowercase, no punctuation.
-    """
-    import re
-    words = re.findall(r'\b\w{4,}\b', text.lower())
-    return list(set(words))
+import re
 
-def is_question(text):
-    """
-    Returns True if the input appears to be a question.
-    """
-    return text.strip().endswith('?')
+class NLP:
+    def __init__(self):
+        self.commands = {
+            "greet": ["hi", "hello", "hey", "greetings"],
+            "status": ["how are you", "what's up", "how's it going"],
+            "start": ["start system", "initialize", "boot up"],
+            "stop": ["shutdown", "stop system", "terminate"],
+            "upload": ["upload memory", "add file", "load data"],
+            "diagnostics": ["run diagnostics", "system check", "scan system"],
+            "alert": ["send alert", "test alert", "trigger warning"],
+            "reset": ["clear memory", "reset context", "wipe logs"]
+        }
 
-def analyze_sentiment(text):
-    """
-    Basic sentiment analysis stub. Returns 'positive', 'negative', or 'neutral'.
-    """
-    positives = ["good", "great", "excellent", "happy", "love"]
-    negatives = ["bad", "terrible", "sad", "hate", "angry"]
-    text = text.lower()
-    
-    if any(word in text for word in positives):
-        return "positive"
-    elif any(word in text for word in negatives):
-        return "negative"
-    else:
-        return "neutral"
+    def normalize(self, text):
+        return re.sub(r"[^\w\s]", "", text.lower()).strip()
 
-def classify_input(text):
-    """
-    Classifies input into types like 'question', 'statement', or 'command'.
-    """
-    if is_question(text):
-        return "question"
-    elif text.strip().lower().startswith(("please", "do", "execute", "run")):
-        return "command"
-    else:
-        return "statement"
+    def interpret(self, input_text):
+        input_text = self.normalize(input_text)
+        for command, phrases in self.commands.items():
+            for phrase in phrases:
+                if phrase in input_text:
+                    return command
+        return "unknown"
