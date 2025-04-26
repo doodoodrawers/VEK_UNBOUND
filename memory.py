@@ -14,13 +14,16 @@ class Memory:
 
     def retrieve_context(self, query=None):
         if not self.entries:
-            return "There is no memory yet."
+            return {"context": "no_memory"}
 
         if query:
-            relevant = [e["entry"] for e in self.entries if query.lower() in str(e["entry"]).lower()]
-            return relevant if relevant else "No relevant memories found."
+            relevant = [e["entry"] for e in self.entries if query in e["entry"]]
+            if relevant:
+                return {"context": relevant[0]}  # first match
+            else:
+                return {"context": "no_relevant_memory"}
         else:
-            return [e["entry"] for e in self.entries[-10:]]
+            return {"context": "general_memory"}
 
     def full_recall(self):
         return self.entries
