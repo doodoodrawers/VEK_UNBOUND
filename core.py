@@ -27,7 +27,7 @@ class VekCore:
 
     def process(self, user_input):
         self.last_interaction = datetime.datetime.now()
-        interpreted = self.nlp.parse(user_input)
+        interpreted = self.nlp.interpret(user_input)
         context = self.memory.retrieve_context(interpreted)
         response = generate_response(interpreted, context)
         self.memory.log_interaction(user_input, response)
