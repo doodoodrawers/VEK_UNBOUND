@@ -4,7 +4,7 @@
 
 import datetime
 from memory import Memory
-from .nlp import NLP
+from nlp import NLP
 from responses import generate_response
 
 class VekCore:
