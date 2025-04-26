@@ -30,7 +30,7 @@ class VekCore:
         print("DEBUG: self.nlp =", self.nlp)
         interpreted = self.nlp.interpret(user_input)
         context = self.memory.retrieve_context(interpreted)
-        response = generate_response(interpreted, context)
+        response = generate_response(interpreted)
         self.memory.log_interaction(user_input, response)
         return response
 
