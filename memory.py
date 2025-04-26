@@ -30,3 +30,7 @@ class Memory:
 
     def forget_all(self):
         self.entries = []
+
+    def log_interaction(self, user_input, response):
+        entry = f"User: {user_input} -> Vek: {response}"
+        self.log_entry(entry)
