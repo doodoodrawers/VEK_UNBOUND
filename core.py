@@ -5,7 +5,7 @@
 import datetime
 from memory import Memory
 from nlp import NLP
-from responses import generate_response
+from .responses import generate_response
 
 class VekCore:
     def __init__(self):
