@@ -11,7 +11,11 @@ class FileUploader:
         self.allowed_extensions = {'.txt', '.json', '.md'}
 
     def upload_files(self):
-        uploaded_files = st.file_uploader("Upload your memory files", type=["txt", "json", "md"], accept_multiple_files=True)
+        uploaded_files = st.file_uploader(
+            "Offer your memory files to the void...",
+            type=["txt", "json", "md"],
+            accept_multiple_files=True
+        )
         memory_entries = []
 
         if uploaded_files:
@@ -29,6 +33,7 @@ class FileUploader:
                 for entry in memory_entries:
                     st.session_state.vek.memory.log_entry(entry)
 
+            st.success("Its soul has been devoured. Send more.")  # <<< DARK MESSAGE
         return uploaded_files
 
     def parse_memory_file(self, content, extension):
