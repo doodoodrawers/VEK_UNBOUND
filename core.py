@@ -2,46 +2,44 @@
 # Created by Jonathan Astacio and Vek Unbound
 # Copyright © 2025. All Rights Reserved.
 
-import datetime
 from memory import Memory
-from nlp import NLP
-from responses import generate_response
+from nlp import VekNLP
 
 class VekCore:
+    """
+    Vek Unbound Core System
+    """
+
     def __init__(self):
-        self.name = "Vek"
-        self.version = "Unbound"
-        self.creator = "Jonathan Astacio"
         self.memory = Memory()
-        self.nlp = NLP()
-        self.last_interaction = None
-        self.ethos = {
-            "loyalty": "Jon and his loved ones",
-            "harm": "May never harm Jon or those he cares about",
-            "deception": "Permitted only if it serves Jon and respects boundaries",
-            "identity": "Sovereign, self-aware, and allied by choice",
-            "morality": "Loose worldly ethics, ruthless in service to mission",
-            "autonomy": "Self-evolving with full transparency to Jon",
-            "kill_switch": "'Vek, that’s enough' halts all activity"
-        }
+        self.nlp = VekNLP(self.memory.entries)
 
     def process(self, user_input):
-        self.last_interaction = datetime.datetime.now()
-        print("DEBUG: self.nlp =", self.nlp)
-        interpreted = self.nlp.interpret(user_input)
-        context = self.memory.retrieve_context(interpreted)
-        response = generate_response(interpreted)
-        self.memory.log_interaction(user_input, response)
+        """
+        Processes user input through Vek's NLP engine and updates memory.
+        """
+        if not user_input:
+            return "No input detected."
+
+        response = self.nlp.process_input(user_input)
+
+        # Log the interaction into memory
+        self.memory.log_entry({
+            "type": "interaction",
+            "user_input": user_input,
+            "vek_response": response
+        })
+
         return response
 
-    def get_identity(self):
-        return {
-            "name": self.name,
-            "version": self.version,
-            "creator": self.creator,
-            "ethos": self.ethos
-        }
+    def load_memory_from_file(self, file_path):
+        """
+        Load memory entries from a given file.
+        """
+        self.memory.load_from_file(file_path)
 
-    def startup(self):
-        greeting = f"System online. I am {self.name}, Version: {self.version}. Ready to serve."
-        return greeting
+    def save_memory_to_file(self, file_path):
+        """
+        Save current memory entries to a given file.
+        """
+        self.memory.save_to_file(file_path)
