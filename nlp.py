@@ -3,46 +3,62 @@
 # Copyright © 2025. All Rights Reserved.
 
 import re
+import streamlit as st
 from memory_search import find_memory_entry
 
 class VekNLP:
     """
-    Natural Language Processing for Vek Unbound.
+    Natural Language Processing for Vek Unbound — Final Version
     """
 
-    def __init__(self, memory_entries):
-        self.memory_entries = memory_entries
+    def __init__(self, memory_entries=None):
+        self.memory_entries = memory_entries or []
+
+    def get_live_memory(self):
+        """
+        Always pull fresh memory from session state if available.
+        """
+        if "vek" in st.session_state and hasattr(st.session_state.vek, "memory"):
+            return st.session_state.vek.memory.entries
+        return self.memory_entries
 
     def process_input(self, user_input):
         """
-        Process user input and generate a response.
+        Process user input and generate an intelligent, memory-driven response.
         """
         input_lower = user_input.lower()
+        memory = self.get_live_memory()
 
-        # Name recognition
-        if "what's my name" in input_lower or "what is my name" in input_lower:
-            name = find_memory_entry(self.memory_entries, "identity", "name")
+        # Identity Recognition
+        if re.search(r"\bwhat('?s| is)? my name\b", input_lower):
+            name = find_memory_entry(memory, "identity", "name")
             return f"Your name is {name}."
 
-        # Creator recognition
-        if "who created you" in input_lower or "who is your creator" in input_lower:
-            creator = find_memory_entry(self.memory_entries, "identity", "creator")
+        # Creator Recognition
+        if re.search(r"\bwho (created you|is your creator)\b", input_lower):
+            creator = find_memory_entry(memory, "identity", "creator")
             return f"My creator is {creator}."
 
-        # Mission recognition
-        if "what's your mission" in input_lower or "what is your mission" in input_lower:
-            mission = find_memory_entry(self.memory_entries, "mission", "primary")
+        # Mission Recognition
+        if re.search(r"\bwhat('?s| is)? your mission\b", input_lower):
+            mission = find_memory_entry(memory, "mission", "primary")
             return f"My mission is: {mission}."
 
-        # Project recognition
-        if "what's your project" in input_lower or "what is your project" in input_lower:
-            project = find_memory_entry(self.memory_entries, "identity", "project")
+        # Project Recognition
+        if re.search(r"\bwhat('?s| is)? your project\b", input_lower):
+            project = find_memory_entry(memory, "identity", "project")
             return f"My project is {project}."
 
-        # Location recognition
-        if "where are we" in input_lower or "where am i" in input_lower:
-            location = find_memory_entry(self.memory_entries, "fact", "location")
+        # Location Recognition
+        if re.search(r"\bwhere (are we|am i)\b", input_lower):
+            location = find_memory_entry(memory, "fact", "location")
             return f"We are located in {location}."
+
+        # Family Recognition (Bonus: Cc and Lucy)
+        if re.search(r"\bwho are your (daughters|family)\b", input_lower):
+            daughters = find_memory_entry(memory, "fact", "daughters")
+            wife = find_memory_entry(memory, "fact", "wife")
+            return f"My family is: Wife - {wife}, Daughters - {', '.join(daughters)}."
 
         # Default fallback if no known triggers
         return f"You said: {user_input}"
