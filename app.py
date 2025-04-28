@@ -20,7 +20,7 @@ st.markdown(
     .stApp {{
         background-image: url("https://raw.githubusercontent.com/doodoodrawers/VEK_UNBOUND/main/assets/vek_peeking.PNG");
         background-attachment: fixed;
-        background-size: cover;
+        background-size: 600px auto;
         background-position: top center;
         background-repeat: no-repeat;
     }}
