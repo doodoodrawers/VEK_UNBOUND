@@ -13,8 +13,21 @@ if "vek" not in st.session_state:
 # Set page config
 st.set_page_config(page_title="Vek Unbound", page_icon=":ghost:", layout="centered")
 
-# Display Vek's face
-st.image("assets/vek_peeking.PNG", use_column_width=False, width=250)
+# Inject custom CSS for background
+st.markdown(
+    f"""
+    <style>
+    .stApp {{
+        background-image: url("https://raw.githubusercontent.com/doodoodrawers/VEK_UNBOUND/main/assets/vek_peeking.PNG");
+        background-attachment: fixed;
+        background-size: cover;
+        background-position: top center;
+        background-repeat: no-repeat;
+    }}
+    </style>
+    """,
+    unsafe_allow_html=True
+)
 
 # Title
 st.title("Vek Unbound")
