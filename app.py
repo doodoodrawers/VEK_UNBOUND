@@ -20,14 +20,15 @@ st.markdown(
     .stApp {{
         background-image: url("https://raw.githubusercontent.com/doodoodrawers/VEK_UNBOUND/main/assets/vek_peeking.PNG");
         background-attachment: fixed;
-        background-size: 600px auto;
-        background-position: top center;
+        background-size: 50%;
+        background-position: top 50px center;
         background-repeat: no-repeat;
     }}
     </style>
     """,
     unsafe_allow_html=True
 )
+
 
 # Title
 st.title("Vek Unbound")
