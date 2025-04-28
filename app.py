@@ -6,10 +6,17 @@ from fileupload import FileUploader
 if "vek" not in st.session_state:
     st.session_state.vek = VekCore()
 
-# Apply custom CSS for fixed title positioning
+# Apply custom CSS for fixed title positioning and background image
 st.markdown(
     """
     <style>
+    body {
+        background-image: url("https://raw.githubusercontent.com/doodoodrawers/VEK_UNBOUND/main/assets/vek_peeking.PNG");
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+        background-attachment: fixed;
+    }
     .title-text {
         position: fixed;
         top: 20px;
@@ -27,7 +34,7 @@ st.markdown(
 # Title (fixed in top-left corner)
 st.markdown("<div class='title-text'>Vek Unbound</div>", unsafe_allow_html=True)
 
-# Spacer to position input below Vek's eyes
+# Spacer to position input under Vek's eyes
 st.markdown("<div style='height: 200px;'></div>", unsafe_allow_html=True)
 
 # Chat Interface (Input box and Send button)
@@ -40,10 +47,10 @@ if st.button("Send"):
     else:
         st.write("Vek: I await your offering...")
 
-# Small spacer to separate input from uploader
+# Small spacer to separate chat from uploader
 st.markdown("<div style='height: 50px;'></div>", unsafe_allow_html=True)
 
-# Memory Uploader (no extra text above it)
+# Memory Uploader
 file_uploader = FileUploader()
 uploaded_files = file_uploader.upload_files()
 
