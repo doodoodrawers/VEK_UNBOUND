@@ -23,11 +23,13 @@ st.markdown(
         background-size: 50%;
         background-position: top 50px center;
         background-repeat: no-repeat;
+        padding-top: 120px;
     }}
     </style>
     """,
     unsafe_allow_html=True
 )
+
 
 # Title
 st.title("Vek Unbound")
