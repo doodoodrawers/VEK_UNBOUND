@@ -32,7 +32,7 @@ st.markdown(
 
 
 # Title - moved manually to upper left
-st.markdown("<div class='title-text'>Vek Unbound</div>", unsafe_allow_html=True)
+st.markdown("<div style='height: 250px;'></div>", unsafe_allow_html=True)
 
 # Spacer between title and chat input
 st.markdown("<div style='height: 150px;'></div>", unsafe_allow_html=True)
