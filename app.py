@@ -29,14 +29,8 @@ st.markdown(
     unsafe_allow_html=True
 )
 
-
 # Title
 st.title("Vek Unbound")
-
-# File uploader
-st.subheader("Offer your memory files to the void...")
-file_uploader = FileUploader()
-uploaded_files = file_uploader.upload_files()
 
 # Chat Interface
 st.subheader("")
@@ -48,6 +42,11 @@ if st.button("Send"):
         st.write(f"Vek: {response}")
     else:
         st.write("Vek: I await your offering...")
+
+# Memory Uploader (now moved to bottom)
+st.subheader("Offer your memory files to the void...")
+file_uploader = FileUploader()
+uploaded_files = file_uploader.upload_files()
 
 # Developer footer (optional)
 st.markdown(
