@@ -31,11 +31,13 @@ st.markdown(
 )
 
 
-# Title
-st.title("Vek Unbound")
+# Title - moved manually to upper left
+st.markdown("<div class='title-text'>Vek Unbound</div>", unsafe_allow_html=True)
+
+# Spacer between title and chat input
+st.markdown("<div style='height: 150px;'></div>", unsafe_allow_html=True)
 
 # Chat Interface
-st.subheader("")
 user_input = st.text_input("You:", key="user_input")
 
 if st.button("Send"):
@@ -45,12 +47,14 @@ if st.button("Send"):
     else:
         st.write("Vek: I await your offering...")
 
-# Memory Uploader (now moved to bottom)
-st.subheader("Offer your memory files to the void...")
+# Big spacer to move uploader way down
+st.markdown("<div style='height: 350px;'></div>", unsafe_allow_html=True)
+
+# Memory Uploader (CLEAN — no extra subheader anymore)
 file_uploader = FileUploader()
 uploaded_files = file_uploader.upload_files()
 
-# Developer footer (optional)
+# Developer Footer
 st.markdown(
     "<small>Created by Jonathan Astacio and Vek Unbound. All rights reserved © 2025.</small>",
     unsafe_allow_html=True,
