@@ -1,4 +1,4 @@
-# final_app.py - Vek Unbound final visual integration
+# final_app.py - Vek Unbound fully finalized visual layout
 
 import streamlit as st
 from core import VekCore
@@ -8,18 +8,24 @@ from fileupload import FileUploader
 if "vek" not in st.session_state:
     st.session_state.vek = VekCore()
 
-# Correct URL based on confirmed file location and casing
+# Proper image URL and scaling
 image_url = "https://raw.githubusercontent.com/doodoodrawers/VEK_UNBOUND/main/assets/vek_peeking.PNG"
 
-# Inject full visual styling
+# CSS for layout and precision
 st.markdown(f"""
 <style>
 [data-testid="stAppViewContainer"] {{
     background-image: url('{image_url}');
-    background-size: cover;
-    background-position: center top;
+    background-size: 50%;
     background-repeat: no-repeat;
+    background-position: center top;
     background-attachment: fixed;
+    overflow: hidden;
+}}
+
+html, body, [data-testid="stAppViewContainer"] {{
+    height: 100vh;
+    overflow: hidden;
 }}
 
 .title-text {{
@@ -32,26 +38,21 @@ st.markdown(f"""
     z-index: 9999;
 }}
 
-/* Reduce vertical space to avoid scrolling */
 main > div.block-container {{
-    padding-top: 150px;
-    padding-bottom: 80px;
+    padding-top: 225px;
+    padding-bottom: 0px;
 }}
 
-/* Ensure uploader is clean and positioned lower */
 section[data-testid="stFileUploader"] {{
-    margin-top: 100px;
+    margin-top: 180px;
 }}
 </style>
 """, unsafe_allow_html=True)
 
-# Add fixed visible title
+# Title in the top-left corner
 st.markdown("<div class='title-text'>Vek Unbound</div>", unsafe_allow_html=True)
 
-# Place input field just under the eyes
-st.markdown("<div style='height: 200px;'></div>", unsafe_allow_html=True)
-
-# Input section
+# Input box positioned across the bridge of the nose
 user_input = st.text_input("You:", key="user_input")
 if st.button("Send"):
     if user_input:
@@ -60,11 +61,11 @@ if st.button("Send"):
     else:
         st.write("Vek: I await your offering...")
 
-# Upload files lower in layout
+# File uploader appears lower down near chest area
 file_uploader = FileUploader()
 uploaded_files = file_uploader.upload_files()
 
-# Footer remains static
+# Footer remains as is
 st.markdown(
     "<small style='color:white;'>Created by Jonathan Astacio and Vek Unbound. All rights reserved © 2025.</small>",
     unsafe_allow_html=True,
