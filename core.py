@@ -21,8 +21,7 @@ class VekCore:
         identity_keywords = ["what's my name", "what is my name", "who am i", "do you know me"]
 
         if any(kw in input_lower for kw in identity_keywords):
-            name = find_memory_entry(self.memory.entries, entry_type="identity", key_name="name")
-            if name != "unknown":
+           name = self.memory.get("name")
                 response = f"You're {name}."
             else:
                 response = "I don't know your name yet. Tell me so I can remember."
