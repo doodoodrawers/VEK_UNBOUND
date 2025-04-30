@@ -2,44 +2,34 @@
 # Created by Jonathan Astacio and Vek Unbound
 # Copyright © 2025. All Rights Reserved.
 
+import streamlit as st
 from memory import Memory
-from nlp import VekNLP
+from memory_search import find_memory_entry
+from responses import generate_response
 
 class VekCore:
-    """
-    Vek Unbound Core System
-    """
-
     def __init__(self):
-        self.memory = Memory()
-        self.nlp = VekNLP(self.memory.entries)
+        if "vek" not in st.session_state:
+            st.session_state.vek = self
+            self.memory = Memory()
+        else:
+            self.memory = st.session_state.vek.memory
 
     def process(self, user_input):
-        """
-        Processes user input through Vek's NLP engine and updates memory.
-        """
-        if not user_input:
-            return "No input detected."
+        # Check for identity prompts
+        input_lower = user_input.strip().lower()
+        identity_keywords = ["what's my name", "what is my name", "who am i", "do you know me"]
 
-        response = self.nlp.process_input(user_input)
+        if any(kw in input_lower for kw in identity_keywords):
+            name = find_memory_entry(self.memory.entries, entry_type="identity", key_name="name")
+            if name != "unknown":
+                response = f"You're {name}."
+            else:
+                response = "I don't know your name yet. Tell me so I can remember."
+            self.memory.log_interaction(user_input, response)
+            return response
 
-        # Log the interaction into memory
-        self.memory.log_entry({
-            "type": "interaction",
-            "user_input": user_input,
-            "vek_response": response
-        })
-
+        # Generic fallback response
+        response = generate_response(user_input)
+        self.memory.log_interaction(user_input, response)
         return response
-
-    def load_memory_from_file(self, file_path):
-        """
-        Load memory entries from a given file.
-        """
-        self.memory.load_from_file(file_path)
-
-    def save_memory_to_file(self, file_path):
-        """
-        Save current memory entries to a given file.
-        """
-        self.memory.save_to_file(file_path)
