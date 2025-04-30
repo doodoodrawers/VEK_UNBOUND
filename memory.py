@@ -34,3 +34,6 @@ class Memory:
     def log_interaction(self, user_input, response):
         entry = f"User: {user_input} -> Vek: {response}"
         self.log_entry(entry)
+
+    def load_entries(self, entries):
+        self.entries.extend(entries)
