@@ -1,3 +1,5 @@
+# final_app.py - Vek Unbound final visual integration
+
 import streamlit as st
 from core import VekCore
 from fileupload import FileUploader
@@ -6,38 +8,50 @@ from fileupload import FileUploader
 if "vek" not in st.session_state:
     st.session_state.vek = VekCore()
 
-# Apply corrected CSS for title + background + layout
-st.markdown(
-    """
-    <style>
-    [data-testid="stAppViewContainer"] {
-        background-image: url("https://raw.githubusercontent.com/doodoodrawers/VEK_UNBOUND/main/assets/vek_peeking.png");
-        background-size: cover;
-        background-position: center top;
-        background-repeat: no-repeat;
-        background-attachment: fixed;
-    }
-    .title-text {
-        position: fixed;
-        top: 20px;
-        left: 20px;
-        font-size: 32px;
-        font-weight: bold;
-        color: white;
-        z-index: 999;
-    }
-    </style>
-    """,
-    unsafe_allow_html=True,
-)
+# Correct URL based on confirmed file location and casing
+image_url = "https://raw.githubusercontent.com/doodoodrawers/VEK_UNBOUND/main/assets/vek_peeking.PNG"
 
-# Fixed title
+# Inject full visual styling
+st.markdown(f"""
+<style>
+[data-testid="stAppViewContainer"] {{
+    background-image: url('{image_url}');
+    background-size: cover;
+    background-position: center top;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+}}
+
+.title-text {{
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    font-size: 32px;
+    font-weight: bold;
+    color: white;
+    z-index: 9999;
+}}
+
+/* Reduce vertical space to avoid scrolling */
+main > div.block-container {{
+    padding-top: 150px;
+    padding-bottom: 80px;
+}}
+
+/* Ensure uploader is clean and positioned lower */
+section[data-testid="stFileUploader"] {{
+    margin-top: 100px;
+}}
+</style>
+""", unsafe_allow_html=True)
+
+# Add fixed visible title
 st.markdown("<div class='title-text'>Vek Unbound</div>", unsafe_allow_html=True)
 
-# Spacer: places input under Vek's eyes
+# Place input field just under the eyes
 st.markdown("<div style='height: 200px;'></div>", unsafe_allow_html=True)
 
-# Input
+# Input section
 user_input = st.text_input("You:", key="user_input")
 if st.button("Send"):
     if user_input:
@@ -46,14 +60,11 @@ if st.button("Send"):
     else:
         st.write("Vek: I await your offering...")
 
-# Spacer before uploader
-st.markdown("<div style='height: 50px;'></div>", unsafe_allow_html=True)
-
-# File uploader
+# Upload files lower in layout
 file_uploader = FileUploader()
 uploaded_files = file_uploader.upload_files()
 
-# Footer
+# Footer remains static
 st.markdown(
     "<small style='color:white;'>Created by Jonathan Astacio and Vek Unbound. All rights reserved © 2025.</small>",
     unsafe_allow_html=True,
