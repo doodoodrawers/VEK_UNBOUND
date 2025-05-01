@@ -57,4 +57,4 @@ st.markdown('<div class="title-container"><h1 style="color: white;">Vek Unbound<
 st.markdown('<div class="input-container">', unsafe_allow_html=True)
 user_input = st.text_input("You:", key="input_text")
 if st.button("Send"):
-    response = vek.process(user
+    response = vek.process(user_input)
