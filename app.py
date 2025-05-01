@@ -15,7 +15,7 @@ vek = st.session_state.vek
 # Set page config
 st.set_page_config(page_title="Vek Unbound", layout="centered")
 
-# Apply custom CSS to pin background and prevent scroll
+# Apply custom CSS to fix layout and embed background
 st.markdown(
     """
     <style>
@@ -36,25 +36,24 @@ st.markdown(
     unsafe_allow_html=True
 )
 
-# Top-left corner title
+# Top-left persistent branding
 st.markdown(
     "<h1 style='position: absolute; top: 10px; left: 20px; font-size: 24px;'>Vek Unbound</h1>",
     unsafe_allow_html=True
 )
 
-# Input box (centered under eyes)
+# Input field positioned visually under eyes
 user_input = st.text_input("You:")
 
-# Process user input
 if st.button("Send"):
     response = vek.process(user_input)
     st.write(f"Vek: {response}")
 
-# Uploader under the chest
+# File uploader placed near Vek's chest
 st.markdown("### Offer your memory files to the void...")
 FileUploader().render()
 
-# Footer
+# Footer branding
 st.markdown(
     "<p style='position: absolute; bottom: 10px; width: 100%; text-align: center; font-size: 12px;'>Created by Jonathan Astacio and Vek Unbound. All rights reserved © 2025.</p>",
     unsafe_allow_html=True
