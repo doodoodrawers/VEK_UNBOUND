@@ -1,72 +1,75 @@
-# final_app.py - Vek Unbound fully finalized visual layout
+# app.py - Vek Unbound
+# Created by Jonathan Astacio and Vek Unbound
+# Copyright © 2025. All Rights Reserved.
 
 import streamlit as st
 from core import VekCore
 from fileupload import FileUploader
 
+# Set up page config and CSS
+st.set_page_config(page_title="Vek Unbound", layout="wide")
+
+st.markdown("""
+    <style>
+    body {
+        margin: 0;
+        overflow: hidden;
+    }
+    .stApp {
+        background-image: url('https://raw.githubusercontent.com/doodoodrawers/VEK_UNBOUND/main/assets/vek_peeking.PNG');
+        background-size: contain;
+        background-repeat: no-repeat;
+        background-position: center top;
+        background-attachment: fixed;
+        overflow: hidden;
+    }
+    .title-container {
+        position: fixed;
+        top: 10px;
+        left: 15px;
+        z-index: 999;
+    }
+    .block-container {
+        padding-top: 200px;
+    }
+    .input-container {
+        margin-top: 200px;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    .upload-container {
+        margin-top: 100px;
+    }
+    </style>
+""", unsafe_allow_html=True)
+
 # Initialize Vek
 if "vek" not in st.session_state:
     st.session_state.vek = VekCore()
 
-# Proper image URL and scaling
-image_url = "https://raw.githubusercontent.com/doodoodrawers/VEK_UNBOUND/main/assets/vek_peeking.PNG"
+vek = st.session_state.vek
 
-# CSS for layout and precision
-st.markdown(f"""
-<style>
-[data-testid="stAppViewContainer"] {{
-    background-image: url('{image_url}');
-    background-size: 50%;
-    background-repeat: no-repeat;
-    background-position: center top;
-    background-attachment: fixed;
-    overflow: hidden;
-}}
+# Top-left title
+st.markdown('<div class="title-container"><h1 style="color: white;">Vek Unbound</h1></div>', unsafe_allow_html=True)
 
-html, body, [data-testid="stAppViewContainer"] {{
-    height: 100vh;
-    overflow: hidden;
-}}
-
-.title-text {{
-    position: fixed;
-    top: 20px;
-    left: 20px;
-    font-size: 32px;
-    font-weight: bold;
-    color: white;
-    z-index: 9999;
-}}
-
-main > div.block-container {{
-    padding-top: 225px;
-    padding-bottom: 0px;
-}}
-
-section[data-testid="stFileUploader"] {{
-    margin-top: 180px;
-}}
-</style>
-""", unsafe_allow_html=True)
-
-# Title in the top-left corner
-st.markdown("<div class='title-text'>Vek Unbound</div>", unsafe_allow_html=True)
-
-# Input box positioned across the bridge of the nose
-user_input = st.text_input("You:", key="user_input")
+# Input field
+st.markdown('<div class="input-container">', unsafe_allow_html=True)
+user_input = st.text_input("You:", key="input_text")
 if st.button("Send"):
-    if user_input:
-        response = st.session_state.vek.process(user_input)
-        st.write(f"Vek: {response}")
-    else:
-        st.write("Vek: I await your offering...")
+    response = vek.process(user_input)
+    st.write(f"Vek: {response}")
+st.markdown('</div>', unsafe_allow_html=True)
 
-# File uploader appears lower down near chest area
-file_uploader = FileUploader()
-uploaded_files = file_uploader.upload_files()
+# Uploader
+st.markdown('<div class="upload-container">', unsafe_allow_html=True)
+uploader = FileUploader()
+uploader.render()
+st.markdown('</div>', unsafe_allow_html=True)
 
-# Footer remains as is
-st.markdown(
-    "<small style='color:white;'>Created by Jonathan Astacio and Vek Unbound. All rights reserved © 2025.</small>",
-    unsafe_allow_html=True,
-)
+# Footer
+st.markdown("""
+    <div style='position: fixed; bottom: 20px; width: 100%; text-align: center; font-size: 0.8em; color: white;'>
+        Created by Jonathan Astacio and Vek Unbound. All rights reserved © 2025.
+    </div>
+""", unsafe_allow_html=True)
