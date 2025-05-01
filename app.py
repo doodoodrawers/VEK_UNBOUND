@@ -57,19 +57,4 @@ st.markdown('<div class="title-container"><h1 style="color: white;">Vek Unbound<
 st.markdown('<div class="input-container">', unsafe_allow_html=True)
 user_input = st.text_input("You:", key="input_text")
 if st.button("Send"):
-    response = vek.process(user_input)
-    st.write(f"Vek: {response}")
-st.markdown('</div>', unsafe_allow_html=True)
-
-# Uploader
-st.markdown('<div class="upload-container">', unsafe_allow_html=True)
-uploader = FileUploader()
-uploader.render()
-st.markdown('</div>', unsafe_allow_html=True)
-
-# Footer
-st.markdown("""
-    <div style='position: fixed; bottom: 20px; width: 100%; text-align: center; font-size: 0.8em; color: white;'>
-        Created by Jonathan Astacio and Vek Unbound. All rights reserved © 2025.
-    </div>
-""", unsafe_allow_html=True)
+    response = vek.process(user
