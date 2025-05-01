@@ -30,24 +30,17 @@ page_bg_img = f"""
 """
 st.markdown(page_bg_img, unsafe_allow_html=True)
 
-# Title in top left corner
-st.markdown("<h1 style='position: fixed; top: 10px; left: 20px; z-index: 999;'>Vek Unbound</h1>", unsafe_allow_html=True)
+# Input and response section
+st.markdown("### You:")
+user_input = st.text_input("", key="user_input", label_visibility="collapsed")
 
-# Spacer
-st.markdown("##")
-
-# Input field (fixed relative to background image)
-user_input = st.text_input("You:", key="input_box")
-
-# Send button
 if st.button("Send"):
     response = vek.process(user_input)
     st.write(f"Vek: {response}")
 
-# Uploader module (below Vek's chest)
-st.markdown("---")
-uploader = FileUploader()
-uploader.render()
+# File uploader section
+st.markdown("#### Offer your memory files to the void...")
+FileUploader().render()
 
 # Footer
-st.markdown("<div style='text-align: center; color: white; font-size: small;'>Created by Jonathan Astacio and Vek Unbound. All rights reserved © 2025.</div>", unsafe_allow_html=True)
+st.markdown("<small>Created by Jonathan Astacio and Vek Unbound. All rights reserved © 2025.</small>", unsafe_allow_html=True)
